@@ -4,7 +4,9 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
+	"strconv"
 )
 
 // type Users struct {
@@ -44,15 +46,23 @@ type Status struct {
 }
 
 func main() {
+	var filename string
+	fmt.Println("Digite o nome do arquivo desejado")
+
+	_, err := fmt.Scanln(&filename)
+	if err != nil {
+		log.Fatal(err)
+	}
 	// Open our XML file
 	// xmlFile, err := os.Open("example.xml")
-	xmlFile, err := os.Open("sswpp.xml")
+	//xmlFile, err := os.Open("sswpp.xml")
+	xmlFile, err := os.Open(filename)
 	// if os.Open returns aan error then handle it
 	if err != nil {
 		fmt.Print(err)
 	}
 
-	fmt.Println("Successfully Opened .xml")
+	//fmt.Println("Successfully Opened .xml")
 	// defer the close of our xmlfile so  that we can parse it later on
 	defer xmlFile.Close()
 
@@ -79,10 +89,13 @@ func main() {
 
 	var wk Workflow
 	xml.Unmarshal(byteValue, &wk)
-	fmt.Println(wk)
+	//fmt.Println(wk)
 	for i := 0; i < len(wk.Steps.Stps); i++ {
-		fmt.Println("Id: " + wk.Steps.Stps[i].Id)
-		fmt.Println("Name: " + wk.Steps.Stps[i].Name)
-		fmt.Println("Meta: " + wk.Steps.Stps[i].Meta)
+		id := wk.Steps.Stps[i].Id
+		name := wk.Steps.Stps[i].Name
+		meta := wk.Steps.Stps[i].Meta
+		intMeta, _ := strconv.Atoi(meta)
+
+		fmt.Printf("Meta: %05d| ID: %s | Name: %s\n", intMeta, id, name)
 	}
 }
