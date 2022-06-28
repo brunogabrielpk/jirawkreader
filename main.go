@@ -43,6 +43,17 @@ type Status struct {
 	Id      string   `xml:"id,attr"`
 	Name    string   `xml:"name,attr"`
 	Meta    string   `xml:"meta"`
+	Actions Actions  `xml:"actions"`
+}
+
+type Actions struct {
+	XMLName    xml.Name     `xml:"actions"`
+	Trasitions []Transition `xml:"action"`
+}
+
+type Transition struct {
+	XMLName xml.Name `xml:"action"`
+	Name    string   `xml:"name,attr"`
 }
 
 func main() {
@@ -97,5 +108,8 @@ func main() {
 		intMeta, _ := strconv.Atoi(meta)
 
 		fmt.Printf("Meta: %05d| ID: %s | Name: %s\n", intMeta, id, name)
+		for j := 0; j < len(wk.Steps.Stps[i].Actions.Trasitions); j++ {
+			fmt.Println(wk.Steps.Stps[i].Actions.Trasitions[j].Name)
+		}
 	}
 }
