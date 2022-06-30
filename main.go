@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
+	"jirawkreader/wkstruct"
 	"log"
 	"os"
 	"strconv"
@@ -28,33 +29,45 @@ import (
 // 	Youtube  string   `xml:"youtube"`
 // }
 
-type Workflow struct {
-	XMLName xml.Name `xml:"workflow"`
-	Steps   Steps    `xml:"steps"`
-}
+// type Workflow struct {
+// 	XMLName    xml.Name   `xml:"workflow"`
+// 	InitAction InitAction `xml:"initial-actions"`
+// 	Steps      Steps      `xml:"steps"`
+// }
 
-type Steps struct {
-	XMLName xml.Name `xml:"steps"`
-	Stps    []Status `xml:"step"`
-}
+// type InitAction struct {
+// 	XMLName xml.Name `xml:"initial-actions"`
+// 	Iaction Iaction  `xml:"action"`
+// }
 
-type Status struct {
-	XMLName xml.Name `xml:"step"`
-	Id      string   `xml:"id,attr"`
-	Name    string   `xml:"name,attr"`
-	Meta    string   `xml:"meta"`
-	Actions Actions  `xml:"actions"`
-}
+// type Iaction struct {
+// 	XMLName     xml.Name `xml:"action"`
+// 	IactionId   string   `xml:"id,attr"`
+// 	IactionName string   `xml:"name,attr"`
+// }
 
-type Actions struct {
-	XMLName    xml.Name     `xml:"actions"`
-	Trasitions []Transition `xml:"action"`
-}
+// type Steps struct {
+// 	XMLName xml.Name `xml:"steps"`
+// 	Stps    []Status `xml:"step"`
+// }
 
-type Transition struct {
-	XMLName xml.Name `xml:"action"`
-	Name    string   `xml:"name,attr"`
-}
+// type Status struct {
+// 	XMLName xml.Name `xml:"step"`
+// 	Id      string   `xml:"id,attr"`
+// 	Name    string   `xml:"name,attr"`
+// 	Meta    string   `xml:"meta"`
+// 	Actions Actions  `xml:"actions"`
+// }
+
+// type Actions struct {
+// 	XMLName    xml.Name     `xml:"actions"`
+// 	Trasitions []Transition `xml:"action"`
+// }
+
+// type Transition struct {
+// 	XMLName xml.Name `xml:"action"`
+// 	Name    string   `xml:"name,attr"`
+// }
 
 func main() {
 	var filename string
@@ -98,9 +111,11 @@ func main() {
 	// 	fmt.Println("Facebook Url:  " + users.Users[i].Social.Facebook)
 	// }
 
-	var wk Workflow
+	var wk wkstruct.Workflow
 	xml.Unmarshal(byteValue, &wk)
 	//fmt.Println(wk)
+	InAction := wk.InitAction.Iaction.IactionName
+	fmt.Println("Initial Actions: " + InAction)
 	for i := 0; i < len(wk.Steps.Stps); i++ {
 		id := wk.Steps.Stps[i].Id
 		name := wk.Steps.Stps[i].Name
