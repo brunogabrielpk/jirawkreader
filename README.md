@@ -10,5 +10,5 @@ Then, run the following code:
 go run main.go
 ```
 Authors:  
-- **Bruno**
-- **Pietro**
+- **Bruno Gabriel Corrêa Pereira**
+- **Pietro Lemes**
