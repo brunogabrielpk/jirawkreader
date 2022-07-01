@@ -18,8 +18,9 @@ for status in doc['workflow']['steps']['step']:
 dot.edge(init_action, init_target_action)
 for status in doc['workflow']['steps']['step']:
     st_id = status['@id']
-    st_target_id =status['actions']['action']['results']['unconditional-result']['@step']
-    dot.edge(st_id, st_target_id)
+    st_target_id = status['actions']['action']['results']['unconditional-result']['@step']
+    label = status['actions']['action']['@name']
+    dot.edge(st_id, st_target_id, label = label)
 
 dot.view()
 

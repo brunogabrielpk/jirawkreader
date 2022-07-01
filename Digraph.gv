@@ -6,8 +6,8 @@ digraph {
 	33 [label="In Progress" color=lightblue shape=box style=filled]
 	44 [label=Done color=lightblue shape=box style=filled]
 	Create -> 11
-	11 -> 22
-	22 -> 33
-	33 -> 44
-	44 -> 11
+	11 -> 22 [label=bltoselected]
+	22 -> 33 [label=selectedtoprogress]
+	33 -> 44 [label=inprogresstodone]
+	44 -> 11 [label=donetobl]
 }
