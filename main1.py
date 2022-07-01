@@ -1,10 +1,11 @@
 import xmltodict
 import graphviz
+import sys
 
-with open('wk4.xml') as fd:
+with open(sys.argv[1]) as fd:  #get the file as a parameter
     doc = xmltodict.parse(fd.read())
 
-dot = graphviz.Digraph(comment='Workflow')
+dot = graphviz.Digraph(comment='Workflow', format='png', filename=sys.argv[1])
 init_action = doc['workflow']['initial-actions']['action']['@name']
 init_target_action = doc['workflow']['initial-actions']['action']['results']['unconditional-result']['@step']
 dot.node(init_action, init_action, {'color': 'lightblue', 'shape': 'box', 'style': 'filled'})
@@ -18,9 +19,8 @@ for status in doc['workflow']['steps']['step']:
 dot.edge(init_action, init_target_action)
 for status in doc['workflow']['steps']['step']:
     st_id = status['@id']
-    st_target_id = status['actions']['action']['results']['unconditional-result']['@step']
-    label = status['actions']['action']['@name']
-    dot.edge(st_id, st_target_id, label = label)
+    st_target_id =status['actions']['action']['results']['unconditional-result']['@step']
+    dot.edge(st_id, st_target_id)
 
 dot.view()
 
