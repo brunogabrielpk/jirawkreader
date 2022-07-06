@@ -45,7 +45,7 @@ def upload_file():
             runxml(fname = os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect('/')
         else:
-            flash('Allowed file types are txt, pdf, png, jpg, jpeg, gif')
+            flash('Allowed file types are xml')
             return redirect(request.url)
 
 

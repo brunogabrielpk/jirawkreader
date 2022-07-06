@@ -6,7 +6,7 @@ def runxml(fname):
     with open(fname) as fd:
         doc = xmltodict.parse(fd.read())
 
-    dot = graphviz.Digraph(comment='Workflow')
+    dot = graphviz.Digraph(comment='Workflow', format="svg")
     init_action = doc['workflow']['initial-actions']['action']['@name']
     init_target_action = doc['workflow']['initial-actions']['action']['results']['unconditional-result']['@step']
     dot.node(init_action, init_action, {'color': 'lightblue', 'shape': 'box', 'style': 'filled'})

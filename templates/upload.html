@@ -1,24 +1,43 @@
 <!doctype html>
-<title>Python Flask Multiple Files Upload Example</title>
-<h2>Select file to upload</h2>
-<p>
-	{% with messages = get_flashed_messages() %}
-	  {% if messages %}
-		<ul class=flashes>
-		{% for message in messages %}
-		  <li>{{ message }}</li>
-		{% endfor %}
-		</ul>
-	  {% endif %}
-	{% endwith %}
-</p>
-<form method="post" action="/" enctype="multipart/form-data">
-    <dl>
-		<p>
-			<input type="file" name="file" autocomplete="off" required>
-		</p>
-    </dl>
-    <p>
-		<input type="submit" value="Submit">
+<head>
+	<title>Python Flask Multiple Files Upload Example</title>
+	<!-- CSS only -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" 
+		rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" 
+		crossorigin="anonymous">
+</head>
+<body>
+	<!-- <div class="d-flex justify-content-center"> 
+		<h2>Select file to upload</h2>
+	</div>-->
+	<p>
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			<ul class=flashes>
+			{% for message in messages %}
+			<li>{{ message }}</li>
+			{% endfor %}
+			</ul>
+		{% endif %}
+		{% endwith %}
 	</p>
-</form>
+	<div class="container">
+		<form method="post" action="/" enctype="multipart/form-data">
+			<div class="row">
+				<div class="col-sm">	
+						<h2>Select file to upload</h2>
+				</div>
+			<div class="row">
+				<div class="col-sm">
+						<!--<input type="file" name="file" autocomplete="off" required>-->
+						<!--<div class="mb-2">-->
+						<!--<label for="formFile" class="form-label">Default file input example</label> id="formFile"-->
+						<input class="form-control" type="file" name="file"  autocomplete="off" required>
+				</div>
+				<div class="col-sm">
+						<input type="submit" class="btn btn-primary" value="Submit">
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
