@@ -24,9 +24,9 @@ def runxml(fname):
         label = status['actions']['action']['@name']
         dot.edge(st_id, st_target_id, label = label)
 
-    dot.render(directory='./static/images', format='png')  
+    dot.render(directory='./static/images', format='jpg')  
     print('filename: '+dot.filename)
-    print('filepath + png: '+dot.filepath+'.png')
-    return dot.filepath+'.png'
+    print('filepath + jpg: '+dot.filepath+'.jpg')
+    return dot.filepath+'.jpg'
 
 
