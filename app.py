@@ -12,9 +12,17 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 path = os.getcwd()
 # file Upload
 UPLOAD_FOLDER = os.path.join(path, 'uploads')
+STATIC_FOLDER = os.path.join(path, 'static')
+IMAGES_FOLDER = os.path.join(path, 'static/images')
 if not os.path.isdir(UPLOAD_FOLDER):
     os.mkdir(UPLOAD_FOLDER)
+if not os.path.isdir(STATIC_FOLDER):
+    os.mkdir(STATIC_FOLDER)
+if not os.path.isdir(IMAGES_FOLDER):
+    os.mkdir(IMAGES_FOLDER)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['STATIC_FOLDER'] = STATIC_FOLDER
+app.config['IMAGES_FOLDER'] = IMAGES_FOLDER
 # ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 ALLOWED_EXTENSIONS = set(['xml'])
 
@@ -42,25 +50,13 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             flash('File successfully uploaded')
-            runxml(fname = os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect('/')
+            filepath= runxml(fname = os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # img_path = os.path.join(app.config['IMAGES_FOLDER'], img_filename)
+            return render_template('upload.html', filename = filepath)
         else:
             flash('Allowed file types are xml')
             return redirect(request.url)
 
-
 if __name__ == "__main__":
     app.run(host='127.0.0.1',port=5000)
 
-# @app.route("/",methods=['GET', 'POST'])
-# def index():
-#     metodo = 'nada'
-#     if request.method == 'POST':
-#         runxml()
-#     if request.method == 'GET':
-#         metodo = 'GET'
-#     nome_da_variavel = "Jira Workflow Parser - By: Bruno Pereira | Pietro Lemes"
-#     return render_template('index.html', variavel=nome_da_variavel, metodo=metodo)
-
-# if __name__ == "__main__":
-#     app.run()

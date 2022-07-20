@@ -6,7 +6,7 @@ def runxml(fname):
     with open(fname) as fd:
         doc = xmltodict.parse(fd.read())
 
-    dot = graphviz.Digraph(comment='Workflow', format="svg")
+    dot = graphviz.Digraph(comment='Workflow')
     init_action = doc['workflow']['initial-actions']['action']['@name']
     init_target_action = doc['workflow']['initial-actions']['action']['results']['unconditional-result']['@step']
     dot.node(init_action, init_action, {'color': 'lightblue', 'shape': 'box', 'style': 'filled'})
@@ -24,23 +24,9 @@ def runxml(fname):
         label = status['actions']['action']['@name']
         dot.edge(st_id, st_target_id, label = label)
 
-    dot.view()
+    dot.render(directory='./static/images', format='png')  
+    print('filename: '+dot.filename)
+    print('filepath + png: '+dot.filepath+'.png')
+    return dot.filepath+'.png'
 
 
-
-# # Create the object
-# dot = graphviz.Graph(comment='Example')
-
-# # add nodes
-# dot.node('db1', 'input A', {'color': 'aquamarine'}, style='filled')
-# dot.node('db2', 'input B', {'color': 'aquamarine'}, style='filled')
-# dot.node('db3', 'input C', {'color': 'aquamarine'}, style='filled')
-
-# dot.node('B', 'transformation', shape='box', style='filled', color='lightblue')
-# dot.node('C', 'output', shape='cylinder', style='filled', color='red')
-
-# # add edges
-# for n in ['db1', 'db2', 'db3']:
-#     dot.edge(n, 'B')
-
-# dot.edge('B', 'C')
