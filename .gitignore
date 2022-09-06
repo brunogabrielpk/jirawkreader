@@ -4,3 +4,4 @@ token.txt
 /static/
 __pycache__/fmain1.cpython-310.pyc
 __pycache__/fmain1.cpython-310.pyc
+__pycache__/*
