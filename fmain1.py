@@ -10,7 +10,6 @@ def runxml(fname):
     init_action = doc['workflow']['initial-actions']['action']['@name']
     init_target_action = doc['workflow']['initial-actions']['action']['results']['unconditional-result']['@step']
     dot.node(init_action, init_action, {'color': 'lightblue', 'shape': 'box', 'style': 'filled'})
-
     for status in doc['workflow']['steps']['step']:
         # print(status['@name'])
         st_name = status['@name']
@@ -28,5 +27,3 @@ def runxml(fname):
     print('filename: '+dot.filename)
     print('filepath + jpg: '+dot.filepath+'.jpg')
     return dot.filepath+'.jpg'
-
-
