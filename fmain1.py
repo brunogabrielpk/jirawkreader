@@ -44,7 +44,15 @@ def runxml(fname):
     ### on the exported workflows.
     ### TODO - update
     ### I was able to create and export a custom workflow that have all the 4 items mentioned above, so, we shold work on this
-    #### Getting to work
+    #### Getting to work...
+    #### [DONE] Extracting and drawing all status of the workflow
+    for status in doc['workflow']['steps']['step']:
+        print(status['@name'])
+        st_name = status['@name']
+        st_id = status['@id']
+        dot.node(st_id, st_name, {'color': 'lightblue', 'shape': 'box', 'style': 'filled'})
+
+
     #### TODO 2.1 => Extract the initial actions
     ####
     ####
