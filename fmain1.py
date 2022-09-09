@@ -46,16 +46,27 @@ def runxml(fname):
     ### I was able to create and export a custom workflow that have all the 4 items mentioned above, so, we shold work on this
     #### Getting to work...
     #### [DONE] Extracting and drawing all status of the workflow
+    class Statuses:
+        def __init__(self, id, name):
+            self.id = id
+            self.name = name
+
+
+    all_statuses = []
     for status in doc['workflow']['steps']['step']:
-        print(status['@name'])
+        #print(status['@name'])
         st_name = status['@name']
         st_id = status['@id']
+        st = Statuses(st_id, st_name)
+        all_statuses.append(st)
         dot.node(st_id, st_name, {'color': 'lightblue', 'shape': 'box', 'style': 'filled'})
 
 
+    for x in all_statuses:
+        print("Status name: "+ x.name+" , Status id: "+ x.id)
     #### TODO 2.1 => Extract the initial actions
-    ####
-    ####
+    init_action = ''
+
     ### End Option 2
     ###################
     ### OLD code ###
