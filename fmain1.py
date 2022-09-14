@@ -35,7 +35,7 @@ def runxml(fname):
     ### Option 2 - treat both types of workflows as one thing, so I'll need to extract all info
     ### regardless of the type
     ### For now, I believe that are 4 types of information present on the workflows
-    ### 2.1 -> Initial actions
+    ### [DONE] 2.1 -> Initial actions
     ### 2.2 -> Global Actions
     ### 2.3 -> common actions
     ### 2.4 -> Steps
@@ -52,6 +52,7 @@ def runxml(fname):
             self.name = name
 
 
+    print("######### Status Name and Status ID #########")
     all_statuses = []
     for status in doc['workflow']['steps']['step']:
         #print(status['@name'])
@@ -64,8 +65,13 @@ def runxml(fname):
 
     for x in all_statuses:
         print("Status name: "+ x.name+" , Status id: "+ x.id)
-    #### TODO 2.1 => Extract the initial actions
-    init_action = ''
+    #### [DONE] 2.1 => Extract the initial actions
+    init_action_id = doc['workflow']['initial-actions']['action']['@id']
+    init_action_name = doc['workflow']['initial-actions']['action']['@name']
+
+    print('######### INITIAL ACTIONS#########')
+    print('Initial Action ID: ' + init_action_id)
+    print('Initial Action Name: ' + init_action_name)
 
     ### End Option 2
     ###################
