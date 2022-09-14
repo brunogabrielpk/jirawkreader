@@ -73,6 +73,17 @@ def runxml(fname):
     print('Initial Action ID: ' + init_action_id)
     print('Initial Action Name: ' + init_action_name)
 
+
+    #### 2.2 => Extract the global actions
+    print("##### Global actions #####")
+    print(doc['workflow']['global-actions']['action']['@id'])
+
+    # for x in doc['workflow']['global-actions']['action']:
+        # print(x['@id'])
+    # for x in doc['workflow']['global-actions']:
+        # print(x['action']['@id'])
+        # print(x['action']['@name'])
+
     ### End Option 2
     ###################
     ### OLD code ###
