@@ -66,24 +66,24 @@ def runxml(fname):
     for x in all_statuses:
         print("Status name: "+ x.name+" , Status id: "+ x.id)
     #### [DONE] 2.1 => Extract the initial actions
-    init_action_id = doc['workflow']['initial-actions']['action']['@id']
-    init_action_name = doc['workflow']['initial-actions']['action']['@name']
+    init_act = doc['workflow']['initial-actions']['action']
+    init_action_id = init_act['@id']
+    init_action_name = init_act['@name']
+    initial_action_target_status = init_act['results']['unconditional-result']['@status']
 
     print('######### INITIAL ACTIONS#########')
     print('Initial Action ID: ' + init_action_id)
     print('Initial Action Name: ' + init_action_name)
+    print('Initial actions target status: ' + initial_action_target_status)
 
-
+    ##### [TODO] - Test, if possible, with workflow that has multiple initial actions
     #### 2.2 => Extract the global actions
     print("##### Global actions #####")
     print(doc['workflow']['global-actions']['action']['@id'])
+    # for item in doc['workflow']['global-actions']['action']:
+        # print(type(item))
 
-    # for x in doc['workflow']['global-actions']['action']:
-        # print(x['@id'])
-    # for x in doc['workflow']['global-actions']:
-        # print(x['action']['@id'])
-        # print(x['action']['@name'])
-
+    ### 2.3 => Extract commom actions/trnasitions
     ### End Option 2
     ###################
     ### OLD code ###
