@@ -51,6 +51,12 @@ def runxml(fname):
             self.id = id
             self.name = name
 
+    class Global_transition:
+        def __init__(self, id, name):
+            self.id = id
+            self.name = name
+
+
 
     print("######### Status Name and Status ID #########")
     all_statuses = []
@@ -79,10 +85,23 @@ def runxml(fname):
     ##### [TODO] - Test, if possible, with workflow that has multiple initial actions
     #### 2.2 => Extract the global actions
     print("##### Global actions #####")
-    print(doc['workflow']['global-actions']['action']['@id'])
-    # for item in doc['workflow']['global-actions']['action']:
-        # print(type(item))
+    # print(doc['workflow']['global-actions']['action']['@id'])
+    all_global_transitions = []
+    print("doc['workflow']['global-actions']) length: ")
+    print(len(doc['workflow']['global-actions']))
+    if len(doc['workflow']['global-actions']):
+        gl_t_id = doc['workflow']['global-actions']['action']['@id']
+        gl_t_name = doc['workflow']['global-actions']['action']['@name']
+        gl_t = Global_transition(gl_t_id, gl_t_name)
+        all_global_transitions.append(gl_t)
 
+    print("All-Global-Transition : ")
+    print(all_global_transitions)
+    print(all_global_transitions[0].id)
+    print(all_global_transitions[0].name)
+
+
+    ##### [TODO] - Test, if possible, with workflow that has multiple Global-Actions
     ### 2.3 => Extract commom actions/trnasitions
     ### End Option 2
     ###################
