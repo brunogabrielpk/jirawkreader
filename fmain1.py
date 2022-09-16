@@ -56,6 +56,11 @@ def runxml(fname):
             self.id = id
             self.name = name
 
+    class Common_transition:
+        def __init__(self, id, name, target):
+            self.id = id
+            self.name = name
+            self.target = target
 
 
     print("######### Status Name and Status ID #########")
@@ -87,6 +92,9 @@ def runxml(fname):
     print("##### Global actions #####")
     # print(doc['workflow']['global-actions']['action']['@id'])
     all_global_transitions = []
+
+    print("All global actions struct")
+    print(all_global_transitions)
     print("doc['workflow']['global-actions']) length: ")
     print(len(doc['workflow']['global-actions']))
     if len(doc['workflow']['global-actions']):
@@ -102,7 +110,8 @@ def runxml(fname):
 
 
     ##### [TODO] - Test, if possible, with workflow that has multiple Global-Actions
-    ### 2.3 => Extract commom actions/trnasitions
+    ### 2.3 => [TODO] Extract commom actions/transitions
+
     ### End Option 2
     ###################
     ### OLD code ###
