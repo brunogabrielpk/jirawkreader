@@ -65,7 +65,12 @@ def runxml(fname):
     for x in all_statuses:
         print("Status name: "+ x.name+" , Status id: "+ x.id)
     #### TODO 2.1 => Extract the initial actions
-    init_action = ''
+    # print('trying to debug something below: ')
+    init_action_name = doc['workflow']['initial-actions']['action']['@name']
+    init_action_id = doc['workflow']['initial-actions']['action']['@id']
+    print('inital action name: ' +  init_action_name)
+    print('inital action id: ' +  init_action_id)
+
 
     ### End Option 2
     ###################
