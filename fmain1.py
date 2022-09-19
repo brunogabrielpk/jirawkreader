@@ -111,7 +111,16 @@ def runxml(fname):
 
     ##### [TODO] - Test, if possible, with workflow that has multiple Global-Actions
     ### 2.3 => [TODO] Extract commom actions/transitions
+    all_common_actions = []
+    for common_action in doc['workflow']['common-actions']['action']:
+        cm_ac_id = common_action['@id']
+        cm_ac_name = common_action['@name']
+        cm_ac_target= common_action['results']['unconditional-result']['@step']
+        cm_ac = Common_transition(cm_ac_id, cm_ac_name, cm_ac_target)
+        all_common_actions.append(cm_ac)
 
+    print("All common actions (below):")
+    print(all_common_actions)
     ### End Option 2
     ###################
     ### OLD code ###
