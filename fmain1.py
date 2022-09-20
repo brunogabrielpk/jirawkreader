@@ -8,30 +8,6 @@ def runxml(fname):
 
     dot = graphviz.Digraph(comment='Workflow')
     ##################
-    ### TODO ###
-    ### [DEPRECATED] 1 => Recognize the type of workflow: JSW or JSM
-    ### [DEPRECATED] 2 => For each workflow, extract all the statuses and define the inital status
-    ### [DEPRECATED] 3 => For each workflow, extract the transitions, the commom ones and the unique to each status
-    ### [DEPRECATED] 4 => Build the workflow image
-    ##################
-    
-    ###################
-    ### Option 1 -  Identify the workflow Status ###
-    ### [DEPRECATED][DONE] - Substep 1 -> create a folder to store examples of workflows
-    ### [DEPRECATED] Identify the Workflow type
-    #### [DEPRECATED] What differ JSM from JSW workflows ?
-    #### [DEPRECATED] the only difference I've noticed (for Jira 9.2 local environment) is the presence of a meta attribute on the
-    #### [DEPRECATED] xml file named "gh.version". I was unable to find this meta attribute on the JSM workflow.
-    #### [DEPRECATED] Maybe, it worth to consider making a logic that cover both types of workflows.
-    #### [DEPRECATED] IF not, proceed with the steps below (treat these step)
-    ##### [DEPRECATED] IF workflow == JSW ###
-    ###### [DEPRECATED] Extract statuses and initial status
-    ###### [DEPRECATED] Extract unique and commom transitions
-    ##### [DEPRECATED] IF workflow == JSM ###
-    ###### [DEPRECATED] Extract statuses and initial status
-    ###### [DEPRECATED] Extract unique and commom transitions
-    ### [DEPRECATED] End Option 1 ####
-    ###################
     ### Option 2 - treat both types of workflows as one thing, so I'll need to extract all info
     ### regardless of the type
     ### For now, I believe that are 4 types of information present on the workflows
@@ -52,9 +28,10 @@ def runxml(fname):
             self.name = name
 
     class Global_transition:
-        def __init__(self, id, name):
+        def __init__(self, id, name, target_status_name):
             self.id = id
             self.name = name
+            self.target = target_status_name
 
     class Common_transition:
         def __init__(self, id, name, target):
@@ -64,6 +41,7 @@ def runxml(fname):
 
 
     print("######### Status Name and Status ID #########")
+    # all status of the workflow
     all_statuses = []
     for status in doc['workflow']['steps']['step']:
         #print(status['@name'])
@@ -97,20 +75,26 @@ def runxml(fname):
     print(all_global_transitions)
     print("doc['workflow']['global-actions']) length: ")
     print(len(doc['workflow']['global-actions']))
-    if len(doc['workflow']['global-actions']):
-        gl_t_id = doc['workflow']['global-actions']['action']['@id']
-        gl_t_name = doc['workflow']['global-actions']['action']['@name']
-        gl_t = Global_transition(gl_t_id, gl_t_name)
-        all_global_transitions.append(gl_t)
+    for x in doc['workflow']['global-actions']['action']:
+        print('x : ')
+        print(x['@id'])
+        print(x['@name'])
+        gl_t_id = x['@id']
+        gl_t_name = x['@name']
+        print(x['results']['unconditional-result']['@status'])
+        # gl_tg_st_id = x['results']['unconditional-result']['@status']
+        # gl_t_tg_st_name = all_statuses[gl_tg_st_id].name
+        # gl_t = Global_transition(gl_t_id, gl_t_name)
+        # all_global_transitions.append(gl_t)
 
     print("All-Global-Transition : ")
     print(all_global_transitions)
-    print(all_global_transitions[0].id)
-    print(all_global_transitions[0].name)
-
-
-    ##### [TODO] - Test, if possible, with workflow that has multiple Global-Actions
-    ### 2.3 => [TODO] Extract commom actions/transitions
+    for item in all_global_transitions:
+        print("Global transition id: " + item.id)
+        print("Global transition name: " + item.name)
+        print("Global transition target status: " + item.target)
+    ### 2.2 => [TODO] draw the global actions
+    ### 2.3 => [IN PROGRESS] Extract commom actions/transitions
     all_common_actions = []
     for common_action in doc['workflow']['common-actions']['action']:
         cm_ac_id = common_action['@id']
@@ -121,6 +105,22 @@ def runxml(fname):
 
     print("All common actions (below):")
     print(all_common_actions)
+    print("Loop trough common actions list:")
+    for ca in all_common_actions:
+        print(ca.id)
+        print(ca.name)
+        print(ca.target)
+
+    ### 2.4 => Extract and draw common actions (transitions) per statuses
+    for status in all_statuses:
+        print("Status: " + status.name)
+        for step in doc['workflow']['steps']['step']:
+            if status.id == step['@id']:
+                # print("Steoin the 'workflow >> steps' loop: ")
+                # print(step)
+                print("step >> actions")
+                print(step['actions'])
+
     ### End Option 2
     ###################
     ### OLD code ###
