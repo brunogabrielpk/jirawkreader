@@ -40,7 +40,7 @@ def runxml(fname):
             self.target = target
 
 
-    print("######### Status Name and Status ID #########")
+    # print("######### Status Name and Status ID #########")
     # all status of the workflow
     all_statuses = []
     for status in doc['workflow']['steps']['step']:
@@ -52,47 +52,47 @@ def runxml(fname):
         dot.node(st_id, st_name, {'color': 'lightblue', 'shape': 'box', 'style': 'filled'})
 
 
-    for x in all_statuses:
-        print("Status name: "+ x.name+" , Status id: "+ x.id)
-    #### [DONE] 2.1 => Extract the initial actions
+    # for x in all_statuses:
+    #     print("Status name: "+ x.name+" , Status id: "+ x.id)
+    # #### [DONE] 2.1 => Extract the initial actions
     init_act = doc['workflow']['initial-actions']['action']
     init_action_id = init_act['@id']
     init_action_name = init_act['@name']
     initial_action_target_status = init_act['results']['unconditional-result']['@status']
 
-    print('######### INITIAL ACTIONS#########')
-    print('Initial Action ID: ' + init_action_id)
-    print('Initial Action Name: ' + init_action_name)
-    print('Initial actions target status: ' + initial_action_target_status)
+    # print('######### INITIAL ACTIONS#########')
+    # print('Initial Action ID: ' + init_action_id)
+    # print('Initial Action Name: ' + init_action_name)
+    # print('Initial actions target status: ' + initial_action_target_status)
 
     ##### [TODO] - Test, if possible, with workflow that has multiple initial actions
     #### 2.2 => Extract the global actions
-    print("##### Global actions #####")
+    # print("##### Global actions #####")
     # print(doc['workflow']['global-actions']['action']['@id'])
     all_global_transitions = []
 
-    print("All global actions struct")
-    print(all_global_transitions)
-    print("doc['workflow']['global-actions']) length: ")
-    print(len(doc['workflow']['global-actions']))
+    # print("All global actions struct")
+    # print(all_global_transitions)
+    # print("doc['workflow']['global-actions']) length: ")
+    # print(len(doc['workflow']['global-actions']))
     for x in doc['workflow']['global-actions']['action']:
-        print('x : ')
-        print(x['@id'])
-        print(x['@name'])
+        # print('x : ')
+        # print(x['@id'])
+        # print(x['@name'])
         gl_t_id = x['@id']
         gl_t_name = x['@name']
-        print(x['results']['unconditional-result']['@status'])
+        # print(x['results']['unconditional-result']['@status'])
         # gl_tg_st_id = x['results']['unconditional-result']['@status']
         # gl_t_tg_st_name = all_statuses[gl_tg_st_id].name
         # gl_t = Global_transition(gl_t_id, gl_t_name)
         # all_global_transitions.append(gl_t)
 
-    print("All-Global-Transition : ")
-    print(all_global_transitions)
-    for item in all_global_transitions:
-        print("Global transition id: " + item.id)
-        print("Global transition name: " + item.name)
-        print("Global transition target status: " + item.target)
+    # print("All-Global-Transition : ")
+    # print(all_global_transitions)
+    # for item in all_global_transitions:
+    #     print("Global transition id: " + item.id)
+    #     print("Global transition name: " + item.name)
+    #     print("Global transition target status: " + item.target)
     ### 2.2 => [TODO] draw the global actions
     ### 2.3 => [IN PROGRESS] Extract commom actions/transitions
     all_common_actions = []
@@ -103,23 +103,65 @@ def runxml(fname):
         cm_ac = Common_transition(cm_ac_id, cm_ac_name, cm_ac_target)
         all_common_actions.append(cm_ac)
 
-    print("All common actions (below):")
-    print(all_common_actions)
-    print("Loop trough common actions list:")
-    for ca in all_common_actions:
-        print(ca.id)
-        print(ca.name)
-        print(ca.target)
+    # print("All common actions (below):")
+    # print(all_common_actions)
+    # print("Loop trough common actions list:")
+    # # for ca in all_common_actions:
+    #     print(ca.id)
+    #     print(ca.name)
+    #     print(ca.target)
 
     ### 2.4 => Extract and draw common actions (transitions) per statuses
-    for status in all_statuses:
-        print("Status: " + status.name)
-        for step in doc['workflow']['steps']['step']:
-            if status.id == step['@id']:
-                # print("Steoin the 'workflow >> steps' loop: ")
-                # print(step)
-                print("step >> actions")
-                print(step['actions'])
+    # print("For status in all_statuses:")
+    # for status in all_statuses:
+    #     print("Status: " + status.name)
+    #     for ca in all_common_actions:
+    #         if ca.target == status.id:
+    #             print("Common action: " + ca.name)
+    #             dot.edge(status.id, ca.target, ca.name)
+    #
+
+    for step in doc['workflow']['steps']['step']:
+        # print("##########")
+        # print("Status Name below >>>")
+        # print(step['@name'])
+        # if step['@name'] == 'Planejamento':
+        if 'actions' in step:
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>      step['actions']: ")
+            print(step['actions'])
+            if 'common-action' in step['actions']:
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> common-action : ")
+                print(step['actions']['common-action'])
+                print(">>>>> common action target")
+                for ca2 in all_common_actions:
+                    # print(">>> step['actions']['common-action']")
+                    # print(step['actions']['common-action'])
+                    for ca1 in step['actions']['common-action']:
+                        print(">>> type of ca1")
+                        print(type(ca1))
+                        print(">>> length of ca1")
+                        print(len(ca1))
+                        if type(ca1) is dict:
+                            if ca2.id == ca1['@id']:
+                                print("#$%#$%#$%#$%#$%#$%#$%#$%#$%#$%$#%#$%#$%#$%$#%#$%#$%#$%#$%")
+                                print(">>>> if ca2.id == ca1['@id']:")
+                                print(">>>ca2.id: ")
+                                print(ca2.id)
+                                print(">>>Status_name: ca2.target : ")
+                                for status in all_statuses:
+                                    if status.id == ca2.target:
+                                        print(status.name)
+                                        dot.edge(step['@id'], status.name, label = ca2.name)
+                                        # dot.edge(step['@name'], status.name, ca2.name)
+                                        print(">>>ca1: ")
+                                        print(ca1)
+                                        # print(">>> type(ca1)")
+                                        # print(type(ca1))
+                                        print(">>>ca1['@id']: ")
+                                        print(ca1['@id'])
+
+        print("#########################")
+        print("#########################")
 
     ### End Option 2
     ###################
