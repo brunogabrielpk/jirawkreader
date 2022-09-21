@@ -8,8 +8,12 @@ def runxml(fname):
     with open(fname) as fd:
         doc = xmltodict.parse(fd.read())
 
-    dot = graphviz.Digraph(comment='Workflow')
-
+    dot = graphviz.Digraph(comment='Workflow',
+                           engine='dot',
+                           graph_attr={
+                               'label': 'Orthogonal edges',
+                               'splines': 'ortho',
+                               'nodesep': '0.5'})
 
     class Statuses:
         def __init__(self, id, name):
@@ -49,26 +53,69 @@ def runxml(fname):
     init_act = doc['workflow']['initial-actions']['action']
     init_action_id = init_act['@id']
     init_action_name = init_act['@name']
-    initial_action_target_status = init_act['results']['unconditional-result']['@status']
+    initial_action_target_status_id = init_act['results']['unconditional-result']['@step']
+
+    print('>>> Initial action: ', init_action_name)
+    print('>>> initial action id: ', init_action_id)
 
 
+    dot.node('-1','Início', {'color': 'lightblue', 'shape': 'box', 'style': 'filled'})
+    dot.edge('-1',initial_action_target_status_id , xlabel = init_action_name)
+    # dot.edge(step['@id'], status.id, label = ca2.name)
+
+
+    # [WARN] It seems that when there is only one global transition, tha workflow -> global-actions -> action is treated as str
     all_global_transitions = []
 
-    for x in doc['workflow']['global-actions']['action']:
-        gl_t_id = x['@id']
-        gl_t_name = x['@name']
-        gl_t_target_id = x['results']['unconditional-result']['@step']
-        gl_t = Global_transition(gl_t_id, gl_t_name, gl_t_target_id)
-        all_global_transitions.append(gl_t)
+    if 'global-actions' in doc['workflow']:
+        if 'action' in doc['workflow']['global-actions']:
+            if isinstance(doc['workflow']['global-actions']['action'], list):
+                for g_act in doc['workflow']['global-actions']['action']:
+                    g_act_id = g_act['@id']
+                    g_act_name = g_act['@name']
+                    g_act_target = g_act['results']['unconditional-result']['@step']
+                    all_global_transitions.append(Global_transition(g_act_id, g_act_name, g_act_target))
+
+
+
+
+
+        # pp(doc['workflow']['global-actions'])
+        # # print(type(doc['workflow']['global-actions']))
+        # # print("dict len below?")
+        # gla_count = 0
+        # # print(len(doc['workflow']['global-actions']['action']))
+        # for item in doc['workflow']['global-actions']['action']:
+        #     gla_count += 1
+        # print("gla_count: ", gla_count)
+        # if gla_count  == 1:
+        #     if 'action' in doc['workflow']['global-actions']:
+        #             print(" There action in global-actions:)")
+        #             gl_t_id = doc['workflow']['global-actions']['action']['@id']
+        #             gl_t_name = doc['workflow']['global-actions']['action']['@name']
+        #             gl_t_target_id = doc['workflow']['global-actions']['action']['results']['unconditional-result']['@step']
+        #             gl_t = Global_transition(gl_t_id, gl_t_name, gl_t_target_id)
+        #             all_global_transitions.append(gl_t)
+        # else:
+        #     for x in doc['workflow']['global-actions']['action']:
+        #         print(type(x))
+        #         if 'action' in x:
+        #             print(" There action in x :)")
+        #             gl_t_id = x['action']['@id']
+        #             gl_t_name = x['action']['@name']
+        #             gl_t_target_id = x['action']['results']['unconditional-result']['@step']
+        #             gl_t = Global_transition(gl_t_id, gl_t_name, gl_t_target_id)
+        #             all_global_transitions.append(gl_t)
 
 
     all_common_actions = []
-    for common_action in doc['workflow']['common-actions']['action']:
-        cm_ac_id = common_action['@id']
-        cm_ac_name = common_action['@name']
-        cm_ac_target= common_action['results']['unconditional-result']['@step']
-        cm_ac = Common_transition(cm_ac_id, cm_ac_name, cm_ac_target)
-        all_common_actions.append(cm_ac)
+    if 'common-actions' in doc['workflow']:
+        for common_action in doc['workflow']['common-actions']['action']:
+            cm_ac_id = common_action['@id']
+            cm_ac_name = common_action['@name']
+            cm_ac_target= common_action['results']['unconditional-result']['@step']
+            cm_ac = Common_transition(cm_ac_id, cm_ac_name, cm_ac_target)
+            all_common_actions.append(cm_ac)
     # Draw all the common actions [DONE]
     for step in doc['workflow']['steps']['step']:
         if 'actions' in step:
@@ -96,7 +143,7 @@ def runxml(fname):
                                 for status in all_statuses:
                                     if status.id == ca2.target:
                                         #print(status.name)
-                                        dot.edge(step['@id'], status.id, label = ca2.name)
+                                        dot.edge(step['@id'], status.id, xlabel = ca2.name)
                                         # dot.edge(step['@name'], status.name, ca2.name)
                                         #print(">>>ca1: ")
                                         #print(ca1)
@@ -120,7 +167,7 @@ def runxml(fname):
         # print(global_action.target_id)
         for status in all_statuses:
             if status.id == global_action.target_id:
-                dot.edge('0', status.id, label = global_action.name)
+                dot.edge('0', status.id, xlabel = global_action.name)
 
 
 
@@ -145,13 +192,13 @@ def runxml(fname):
 
 
     for tr in all_single_transitions:
-        print("Single transition data: ")
-        print(tr.id)
-        print(tr.name)
-        print(tr.target_id)
-        print(tr.current_st_id)
-        print(tr.current_st_name)
-        dot.edge(tr.current_st_id, tr.target_id, label = tr.name)
+        # print("Single transition data: ")
+        # print(tr.id)
+        # print(tr.name)
+        # print(tr.target_id)
+        # print(tr.current_st_id)
+        # print(tr.current_st_name)
+        dot.edge(tr.current_st_id, tr.target_id, xabel = tr.name)
 
     dot.render(directory='./static/images', format='jpg')
     print('filename: ' + dot.filename)
