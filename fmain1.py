@@ -1,5 +1,7 @@
 import xmltodict
 import graphviz
+import json
+from pprintpp import pprint as pp
 
 def runxml(fname): 
     # with open('wk4.xml') as fd:
@@ -25,6 +27,15 @@ def runxml(fname):
             self.id = id
             self.name = name
             self.target = target
+
+    class Single_transition:
+        def __init__(self, id, name, target_id, c_st_id, c_st_name):
+            self.id = id
+            self.name = name
+            self.target_id = target_id
+            self.current_st_id = c_st_id
+            self.current_st_name = c_st_name
+
 
     all_statuses = []
     for status in doc['workflow']['steps']['step']:
@@ -93,34 +104,56 @@ def runxml(fname):
                                         # print(type(ca1))
                                         #print(">>>ca1['@id']: ")
                                         #print(ca1['@id'])
-        print("#########################")
-        print("#########################")
+        # print("#########################")
+        # print("#########################")
 
-    # Draw the global actions [IN PROGRESS]
+    # Draw the global actions [DONE]
     # Draw a node to represent "ALL" statuses
 
     dot.node('0', 'ALL', {'color': 'lightblue', 'shape': 'box', 'style': 'filled'})
     for global_action in all_global_transitions:
-        print(">>> global_action.id: ")
-        print(global_action.id)
-        print(">>> global_action.name: ")
-        print(global_action.name)
-        print(">>> global_action.target_id: ")
-        print(global_action.target_id)
+        # print(">>> global_action.id: ")
+        # print(global_action.id)
+        # print(">>> global_action.name: ")
+        # print(global_action.name)
+        # print(">>> global_action.target_id: ")
+        # print(global_action.target_id)
         for status in all_statuses:
             if status.id == global_action.target_id:
                 dot.edge('0', status.id, label = global_action.name)
 
 
 
+    all_single_transitions = []
+    for step in doc['workflow']['steps']['step']:
+        sg_tr_c_st_id = step['@id']
+        sg_tr_c_st_name = step['@name']
+        if 'actions' in step:
+            # print(type(step['actions']))
+            if 'action' in step['actions']:
+                # print(type(step['actions']['action']))
+                # pp(step['actions']['action'])
+                for list_item in step['actions']['action']:
+                    if type(list_item) is dict:
+                        # print(type(list_item))
+                        # pp(list_item)
+                        sg_tr_id = list_item['@id']
+                        sg_tr_name = list_item['@name']
+                        sg_tr_target_id = list_item['results']['unconditional-result']['@step']
+                        sg_tr = Single_transition(sg_tr_id, sg_tr_name, sg_tr_target_id, sg_tr_c_st_id, sg_tr_c_st_name)
+                        all_single_transitions.append(sg_tr)
 
-    #print("Checking all nodes id's")
-    #for x in all_statuses:
-    #    print(">>> x.id: ")
-    #    print(x.id)
 
+    for tr in all_single_transitions:
+        print("Single transition data: ")
+        print(tr.id)
+        print(tr.name)
+        print(tr.target_id)
+        print(tr.current_st_id)
+        print(tr.current_st_name)
+        dot.edge(tr.current_st_id, tr.target_id, label = tr.name)
 
-    dot.render(directory='./static/images', format='jpg')  
+    dot.render(directory='./static/images', format='jpg')
     print('filename: ' + dot.filename)
     print('filepath + jpg: ' + dot.filepath+'.jpg')
     return dot.filepath+'.jpg'
