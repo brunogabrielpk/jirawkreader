@@ -13,7 +13,7 @@ def runxml(fname):
                            graph_attr={
                                'label': 'Orthogonal edges',
                                'splines': 'ortho',
-                               'nodesep': '0.5'})
+                               'nodesep': '0.9'})
 
     class Statuses:
         def __init__(self, id, name):
@@ -93,7 +93,7 @@ def runxml(fname):
 
     for step in doc['workflow']['steps']['step']:
         if 'actions' in step:
-            print('>>> Actions in step =>  Current step: ', step['@name'])
+            print('>>> Common Actions in step =>  Current step: ', step['@name'])
             if 'common-action' in step['actions']:
                 if isinstance(step['actions']['common-action'], list):
                     for common_action in step['actions']['common-action']:
