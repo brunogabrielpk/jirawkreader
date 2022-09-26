@@ -11,8 +11,8 @@ def runxml(fname):
     dot = graphviz.Digraph(comment='Workflow',
                            engine='dot',
                             graph_attr={
-                           #     'label': 'Orthogonal edges',
-                           #     'splines': 'ortho',
+                                'label': 'Orthogonal edges',
+                                'splines': 'ortho',
                                 'nodesep': '1.0',
                                 'pad': '1.0'})
 
@@ -56,12 +56,12 @@ def runxml(fname):
     init_action_name = init_act['@name']
     initial_action_target_status_id = init_act['results']['unconditional-result']['@step']
 
-    print('>>> Initial action: ', init_action_name)
-    print('>>> initial action id: ', init_action_id)
+    # print('>>> Initial action: ', init_action_name)
+    # print('>>> initial action id: ', init_action_id)
 
 
     dot.node('-1','Início', {'color': 'lightblue', 'shape': 'box', 'style': 'filled'})
-    dot.edge('-1',initial_action_target_status_id , xlabel = init_action_name)
+    dot.edge('-1',initial_action_target_status_id , xlabel = init_action_name, fontsize='10')
 
 
     all_global_transitions = []
@@ -85,32 +85,75 @@ def runxml(fname):
             cm_ac = Common_transition(cm_ac_id, cm_ac_name, cm_ac_target)
             all_common_actions.append(cm_ac)
 
-
+    # Commom Actions
     # Printing all the common actions
-    for x in all_common_actions:
-        print('>>> Common action: ', x.name)
-        print('>>> Common action id: ', x.id)
-        print('>>> Common action target: ', x.target)
+    # for x in all_common_actions:
+    #     print('>>> Common action: ', x.name)
+    #     print('>>> Common action id: ', x.id)
+    #     print('>>> Common action target: ', x.target)
 
-    for step in doc['workflow']['steps']['step']:
-        if 'actions' in step:
-            print('>>> Common Actions in step =>  Current step: ', step['@name'])
-            if 'common-action' in step['actions']:
-                if isinstance(step['actions']['common-action'], list):
-                    for common_action in step['actions']['common-action']:
-                        print(">>>> common_action: ", common_action, ">> common_action['id'] : ", common_action['@id'])
-                        for ca in all_common_actions:
-                            if ca.id == common_action['@id']:
-                                print(">>>>>> common_action['id'] : ", common_action['@id'], ">> ca.id : ", ca.id)
-                                dot.edge(step['@id'], ca.target, xlabel = ca.name, color = 'green')
+    # for step in doc['workflow']['steps']['step']:
+    #     if 'actions' in step:
+    #         print('>>> Common Actions in step =>  Current step: ', step['@name'])
+    #         if 'common-action' in step['actions']:
+    #             print('>>>> type(step) :', type(step))
+    #             if isinstance(step['actions']['common-action'], list):
+    #                 for common_action in step['actions']['common-action']:
+    #                     print(">>>> common_action: ", common_action, ">> common_action['id'] : ", common_action['@id'])
+    #                     for ca in all_common_actions:
+    #                         if ca.id == common_action['@id']:
+    #                             print(">>>>>> common_action['id'] : ", common_action['@id'], ">> ca.id : ", ca.id)
+    #                             dot.edge(step['@id'], ca.target, xlabel = ca.name, color = 'green', fontsize='10')
                         # dot.edge(step['@id'], common_action['@id'], xlabel = "aaaaaaaaaa")
+    # common actions 2nd try
+    for step in doc['workflow']['steps']['step']:
+        print("######################################################")
+        print("Entering the loop ...")
+        print(">> Step name: ", step['@name'])
+        if 'actions' in step:
+            if 'common-action' in step['actions']:
+                pp(step['actions']['common-action'])
+                x = len(step['actions']['common-action'])
+                print(">>>> len(steps['actions']['common-action']) : ", x)
+                if x == 1:
+                    print("***************************************************************")
+                    print(">>>> step['actions']['common-action']['@id'] : ", step['actions']['common-action']['@id'])
+                    for ca2 in all_common_actions:
+                        if ca2.id == step['actions']['common-action']['@id']:
+                            print(">>>>>> common action name : ", ca2.name)
+                            dot.edge(step['@id'], ca2.target, xlabel = ca2.name, color = 'yellow', fontsize='10')
+                    print("***************************************************************")
+                else:
+                    for ca in range(x):
+                        # print(">>>>> pp step")
+                        # pp(step['actions']['common-action'])
+                        try:
+                            print(">>>>>> pp step ca")
+                            pp(step['actions']['common-action'][ca])
+                            print(">>>>>> end pp step ca")
+                        except BaseException as error:
+                            print("[ERROR] [ERROR] [ERROR] [ERROR] [ERROR]")
+                            print('An exception occurred: {}'.format(error))
+                            continue
+                        for ca2 in all_common_actions:
+                            # print(">>>>>> ca2.id : ", ca2.id, " ???  ", step['actions']['common-action'][ca]['@id'], " step['actions']['common-action'][ca]['@id']")
+                            print("types comparison")
+                            print(type(ca2.id))
+                            print(type(step['actions']['common-action'][ca]['@id']))
+                            if ca2.id == step['actions']['common-action'][ca]['@id']:
+                                print(">>>>>> TRUE !!!! ")
+                                print(">>>>>> ca2.target : ", ca2.target)
+                                dot.edge(step['@id'], ca2.target, xlabel = ca2.name, color = 'green', fontsize='10')
+        else:
+            print("There is no common-actions in step: ", step['@name'])
 
+    # Global Actions
     dot.node('0', 'ALL', {'color': 'lightblue', 'shape': 'box', 'style': 'filled'})
     for global_action in all_global_transitions:
         # print('>>> Global action: ', global_action.name)
         for status in all_statuses:
             if status.id == global_action.target_id:
-                dot.edge('0', status.id, xlabel = global_action.name, color = 'blue')
+                dot.edge('0', status.id, xlabel = global_action.name, color = 'blue', fontsize = '10')
 
 
 
@@ -131,11 +174,11 @@ def runxml(fname):
 
 
     for tr in all_single_transitions:
-        print('>>>> tr.name: ', tr.name)
-        print('>>>> tr.id: ', tr.id)
-        print('>>>> tr.target_id: ', tr.target_id)
-        print('>>>> tr.current_st_id: ', tr.current_st_id)
-        dot.edge(tr.current_st_id, tr.target_id, xlabel = tr.name, color = 'red')
+        # print('>>>> tr.name: ', tr.name)
+        # print('>>>> tr.id: ', tr.id)
+        # print('>>>> tr.target_id: ', tr.target_id)
+        # print('>>>> tr.current_st_id: ', tr.current_st_id)
+        dot.edge(tr.current_st_id, tr.target_id, xlabel = tr.name, color = 'red', fontsize = '10')
 
     # u = w.unflatten(stagger=3)
     dot = dot.unflatten(stagger=4)
