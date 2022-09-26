@@ -10,10 +10,11 @@ def runxml(fname):
 
     dot = graphviz.Digraph(comment='Workflow',
                            engine='dot',
-                           graph_attr={
-                               'label': 'Orthogonal edges',
-                               'splines': 'ortho',
-                               'nodesep': '0.9'})
+                            graph_attr={
+                           #     'label': 'Orthogonal edges',
+                           #     'splines': 'ortho',
+                                'nodesep': '1.0',
+                                'pad': '1.0'})
 
     class Statuses:
         def __init__(self, id, name):
@@ -101,7 +102,7 @@ def runxml(fname):
                         for ca in all_common_actions:
                             if ca.id == common_action['@id']:
                                 print(">>>>>> common_action['id'] : ", common_action['@id'], ">> ca.id : ", ca.id)
-                                dot.edge(step['@id'], ca.target, xlabel = ca.name)
+                                dot.edge(step['@id'], ca.target, xlabel = ca.name, color = 'green')
                         # dot.edge(step['@id'], common_action['@id'], xlabel = "aaaaaaaaaa")
 
     dot.node('0', 'ALL', {'color': 'lightblue', 'shape': 'box', 'style': 'filled'})
@@ -109,7 +110,7 @@ def runxml(fname):
         # print('>>> Global action: ', global_action.name)
         for status in all_statuses:
             if status.id == global_action.target_id:
-                dot.edge('0', status.id, xlabel = global_action.name)
+                dot.edge('0', status.id, xlabel = global_action.name, color = 'blue')
 
 
 
@@ -130,9 +131,14 @@ def runxml(fname):
 
 
     for tr in all_single_transitions:
-        print('>>>> tr: ', tr.name)
-        dot.edge(tr.current_st_id, tr.target_id, xabel = tr.name)
+        print('>>>> tr.name: ', tr.name)
+        print('>>>> tr.id: ', tr.id)
+        print('>>>> tr.target_id: ', tr.target_id)
+        print('>>>> tr.current_st_id: ', tr.current_st_id)
+        dot.edge(tr.current_st_id, tr.target_id, xlabel = tr.name, color = 'red')
 
+    # u = w.unflatten(stagger=3)
+    dot = dot.unflatten(stagger=4)
     dot.render(directory='./static/images', format='jpg')
     print('filename: ' + dot.filename)
     print('filepath + jpg: ' + dot.filepath+'.jpg')
