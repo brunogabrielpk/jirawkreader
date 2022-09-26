@@ -125,10 +125,12 @@ def runxml(fname):
                         sg_tr_name = list_item['@name']
                         sg_tr_target_id = list_item['results']['unconditional-result']['@step']
                         sg_tr = Single_transition(sg_tr_id, sg_tr_name, sg_tr_target_id, sg_tr_c_st_id, sg_tr_c_st_name)
+                        # print('Single transition to be appended next :')
                         all_single_transitions.append(sg_tr)
 
 
     for tr in all_single_transitions:
+        print('>>>> tr: ', tr.name)
         dot.edge(tr.current_st_id, tr.target_id, xabel = tr.name)
 
     dot.render(directory='./static/images', format='jpg')
