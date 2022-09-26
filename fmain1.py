@@ -86,66 +86,46 @@ def runxml(fname):
             all_common_actions.append(cm_ac)
 
     # Commom Actions
-    # Printing all the common actions
-    # for x in all_common_actions:
-    #     print('>>> Common action: ', x.name)
-    #     print('>>> Common action id: ', x.id)
-    #     print('>>> Common action target: ', x.target)
-
-    # for step in doc['workflow']['steps']['step']:
-    #     if 'actions' in step:
-    #         print('>>> Common Actions in step =>  Current step: ', step['@name'])
-    #         if 'common-action' in step['actions']:
-    #             print('>>>> type(step) :', type(step))
-    #             if isinstance(step['actions']['common-action'], list):
-    #                 for common_action in step['actions']['common-action']:
-    #                     print(">>>> common_action: ", common_action, ">> common_action['id'] : ", common_action['@id'])
-    #                     for ca in all_common_actions:
-    #                         if ca.id == common_action['@id']:
-    #                             print(">>>>>> common_action['id'] : ", common_action['@id'], ">> ca.id : ", ca.id)
-    #                             dot.edge(step['@id'], ca.target, xlabel = ca.name, color = 'green', fontsize='10')
-                        # dot.edge(step['@id'], common_action['@id'], xlabel = "aaaaaaaaaa")
-    # common actions 2nd try
     for step in doc['workflow']['steps']['step']:
-        print("######################################################")
-        print("Entering the loop ...")
-        print(">> Step name: ", step['@name'])
+        # print("######################################################")
+        # print("Entering the loop ...")
+        # print(">> Step name: ", step['@name'])
         if 'actions' in step:
             if 'common-action' in step['actions']:
-                pp(step['actions']['common-action'])
+                # pp(step['actions']['common-action'])
                 x = len(step['actions']['common-action'])
-                print(">>>> len(steps['actions']['common-action']) : ", x)
+                # print(">>>> len(steps['actions']['common-action']) : ", x)
                 if x == 1:
-                    print("***************************************************************")
-                    print(">>>> step['actions']['common-action']['@id'] : ", step['actions']['common-action']['@id'])
+                    # print("***************************************************************")
+                    # print(">>>> step['actions']['common-action']['@id'] : ", step['actions']['common-action']['@id'])
                     for ca2 in all_common_actions:
                         if ca2.id == step['actions']['common-action']['@id']:
-                            print(">>>>>> common action name : ", ca2.name)
+                            # print(">>>>>> common action name : ", ca2.name)
                             dot.edge(step['@id'], ca2.target, xlabel = ca2.name, color = 'yellow', fontsize='10')
-                    print("***************************************************************")
+                    # print("***************************************************************")
                 else:
                     for ca in range(x):
                         # print(">>>>> pp step")
                         # pp(step['actions']['common-action'])
-                        try:
-                            print(">>>>>> pp step ca")
-                            pp(step['actions']['common-action'][ca])
-                            print(">>>>>> end pp step ca")
-                        except BaseException as error:
-                            print("[ERROR] [ERROR] [ERROR] [ERROR] [ERROR]")
-                            print('An exception occurred: {}'.format(error))
-                            continue
+                        # try:
+                            # print(">>>>>> pp step ca")
+                            # pp(step['actions']['common-action'][ca])
+                            # print(">>>>>> end pp step ca")
+                        # except BaseException as error:
+                            # print("[ERROR] [ERROR] [ERROR] [ERROR] [ERROR]")
+                            # print('An exception occurred: {}'.format(error))
+                            # continue
                         for ca2 in all_common_actions:
                             # print(">>>>>> ca2.id : ", ca2.id, " ???  ", step['actions']['common-action'][ca]['@id'], " step['actions']['common-action'][ca]['@id']")
-                            print("types comparison")
-                            print(type(ca2.id))
-                            print(type(step['actions']['common-action'][ca]['@id']))
+                            # print("types comparison")
+                            # print(type(ca2.id))
+                            # print(type(step['actions']['common-action'][ca]['@id']))
                             if ca2.id == step['actions']['common-action'][ca]['@id']:
-                                print(">>>>>> TRUE !!!! ")
-                                print(">>>>>> ca2.target : ", ca2.target)
+                                # print(">>>>>> TRUE !!!! ")
+                                # print(">>>>>> ca2.target : ", ca2.target)
                                 dot.edge(step['@id'], ca2.target, xlabel = ca2.name, color = 'green', fontsize='10')
-        else:
-            print("There is no common-actions in step: ", step['@name'])
+        # else:
+            # print("There is no common-actions in step: ", step['@name'])
 
     # Global Actions
     dot.node('0', 'ALL', {'color': 'lightblue', 'shape': 'box', 'style': 'filled'})
@@ -156,29 +136,34 @@ def runxml(fname):
                 dot.edge('0', status.id, xlabel = global_action.name, color = 'blue', fontsize = '10')
 
 
+    def line():
+        print("--------------------------------------------------------------------")
 
     all_single_transitions = []
     for step in doc['workflow']['steps']['step']:
-        sg_tr_c_st_id = step['@id']
-        sg_tr_c_st_name = step['@name']
-        if 'actions' in step:
-            if 'action' in step['actions']:
-                for list_item in step['actions']['action']:
-                    if type(list_item) is dict:
-                        sg_tr_id = list_item['@id']
-                        sg_tr_name = list_item['@name']
-                        sg_tr_target_id = list_item['results']['unconditional-result']['@step']
-                        sg_tr = Single_transition(sg_tr_id, sg_tr_name, sg_tr_target_id, sg_tr_c_st_id, sg_tr_c_st_name)
-                        # print('Single transition to be appended next :')
-                        all_single_transitions.append(sg_tr)
+        line()
+        print("Entering the loop ...")
+        print(">> Step name: ", step['@name'])
+        if ('actions' in step) and ('action' in step['actions']):
+            print(type(step['actions']['action']))
+            if isinstance(step['actions']['action'], dict):
+                dot.edge(step['@id'], step['actions']['action']['results']['unconditional-result']['@step'], xlabel = step['actions']['action']['@name'], color = 'red', fontsize='10')
+            elif isinstance(step['actions']['action'], list):
+                for act in step['actions']['action']:
+                    dot.edge(step['@id'], act['results']['unconditional-result']['@step'], xlabel = act['@name'], color = 'purple', fontsize='10')
+        else:
+            print("There is no single actions in step: ", step['@name'])
+        line()
 
 
-    for tr in all_single_transitions:
-        # print('>>>> tr.name: ', tr.name)
-        # print('>>>> tr.id: ', tr.id)
-        # print('>>>> tr.target_id: ', tr.target_id)
-        # print('>>>> tr.current_st_id: ', tr.current_st_id)
-        dot.edge(tr.current_st_id, tr.target_id, xlabel = tr.name, color = 'red', fontsize = '10')
+
+    # for tr in all_single_transitions:
+    #     print("##################################")
+    #     print('>>>> tr.name: ', tr.name)
+    #     print('>>>> tr.id: ', tr.id)
+    #     print('>>>> tr.target_id: ', tr.target_id)
+    #     print('>>>> tr.current_st_id: ', tr.current_st_id)
+    #     dot.edge(tr.current_st_id, tr.target_id, xlabel = tr.name, color = 'red', fontsize = '10')
 
     # u = w.unflatten(stagger=3)
     dot = dot.unflatten(stagger=4)
