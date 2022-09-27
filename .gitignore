@@ -10,3 +10,6 @@ __pycache__*
 
 default.nix
 app.egg-info
+
+
+/env1/
