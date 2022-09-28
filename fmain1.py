@@ -1,14 +1,17 @@
 import xmltodict
 import graphviz
 import json
+import random
 from pprintpp import pprint as pp
 
 def runxml(fname): 
     # with open('wk4.xml') as fd:
     with open(fname) as fd:
         doc = xmltodict.parse(fd.read())
-
-    dot = graphviz.Digraph(comment='Workflow',
+    rn = random.randint(1,10000)
+    rfilename = 'd-' + str(rn) + '-Diagraph.gv'
+    dot = graphviz.Digraph(filename=rfilename,
+                           comment='Workflow',
                            engine='dot',
                             graph_attr={
                                 'label': 'Orthogonal edges',
@@ -167,9 +170,7 @@ def runxml(fname):
 
     # u = w.unflatten(stagger=3)
     dot = dot.unflatten(stagger=4)
-    dot.render(directory='./static/images', format='jpg')
+    dot.render(directory='./static/images', format='pdf')
     print('filename: ' + dot.filename)
-    print('filepath + jpg: ' + dot.filepath+'.jpg')
-    return dot.filepath+'.jpg'
-
-
+    print('filepath + pdf: ' + dot.filepath+'.pdf')
+    return dot.filepath+'.pdf'
