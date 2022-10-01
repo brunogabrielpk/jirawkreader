@@ -13,3 +13,4 @@ app.egg-info
 
 
 /env1/
+__pycache__/fmain1.cpython-310.pyc
