@@ -2,6 +2,8 @@ import xmltodict
 import graphviz
 import json
 import random
+import os
+import shutil
 from pprintpp import pprint as pp
 
 def runxml(fname): 
@@ -169,6 +171,10 @@ def runxml(fname):
     #     dot.edge(tr.current_st_id, tr.target_id, xlabel = tr.name, color = 'red', fontsize = '10')
 
     # u = w.unflatten(stagger=3)
+    # clean the static/images folder (macos will be a problem with files that have the same name)
+    shutil.rmtree('./static/images/')
+    os.mkdir('./static/images/')
+    # end clear1
     dot = dot.unflatten(stagger=4)
     dot.render(directory='./static/images', format='pdf')
     print('filename: ' + dot.filename)
