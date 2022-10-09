@@ -83,12 +83,23 @@ def runxml(fname):
 
     all_common_actions = []
     if 'common-actions' in doc['workflow']:
-        for common_action in doc['workflow']['common-actions']['action']:
+        if isinstance(doc['workflow']['common-actions']['action'], list):
+            for common_action in doc['workflow']['common-actions']['action']:
+                cm_ac_id = common_action['@id']
+                cm_ac_name = common_action['@name']
+                cm_ac_target= common_action['results']['unconditional-result']['@step']
+                cm_ac = Common_transition(cm_ac_id, cm_ac_name, cm_ac_target)
+                all_common_actions.append(cm_ac)
+        if isinstance(doc['workflow']['common-actions']['action'], dict):
+            common_action = doc['workflow']['common-actions']['action']
             cm_ac_id = common_action['@id']
             cm_ac_name = common_action['@name']
             cm_ac_target= common_action['results']['unconditional-result']['@step']
             cm_ac = Common_transition(cm_ac_id, cm_ac_name, cm_ac_target)
             all_common_actions.append(cm_ac)
+
+
+
 
     # Commom Actions
     for step in doc['workflow']['steps']['step']:
