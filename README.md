@@ -8,6 +8,7 @@ The simplest way to use Jira Workflow Parser is using Docker.
 - Then, you'll need to start a container from that image mapping a port (from the host) to the port 80(of the container) like in the following example (the port 5000 was chosen, however you can any port you want)
 - ```docker run -p 5000:80 pokkew/jwk:v1```
 - In the browser access the URL http://localhost:5000/ (just replacing 5000 with port number of your choice)
+- The page is very straight-forward
 
 Also, there is a 'lighter' way to run the tool, however it will demand some dependencies:
 - Python 3.8
