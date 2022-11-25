@@ -1,5 +1,5 @@
 # Jira workflow parser
-This is a project developed by me, Bruno Pereira, and Pietro Lemes whose objective is to visualize workflows exported through Jira in the browser, thus eliminating the need to have a Jira instance up and running.
+This is a project developed by me, ***Bruno Pereira***, and ***Pietro Lemes*** whose objective is to visualize workflows exported through Jira in the browser, thus eliminating the need to have a Jira instance up and running.
 
 ## Getting started
 The simplest way to use Jira Workflow Parser is using Docker.
